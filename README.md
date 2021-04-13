@@ -1,39 +1,42 @@
+This is an example with **The Clean Architecture** principles and patterns. It calculates gross price of selected items from Amazon.  
+- exec: `php app.php -f {amazon_url} -f {amazon_url} -f {amazon_url}`  
+<br/>
 
-# APP
-Applying Clean Architecture principles and patterns   
+### LAYERS
+#### Domain layer
+>Domain layer is core of the application. It defines enterprise-wide domain objects, services
+and interfaces for outer layers. Domain objects encapsulate core business logic and are less
+likely to change by changes from external world. They should be plain old PHP Objects which are 
+language specific only (i.e. should not depend on tools such as frameworks, libs). 
 
-app.php is basically bootstrapping and then forwards the users' requests to the corresponding views/controllers.
+#### Application layer
+>Application layer defines Use Cases (application specific) which in turn uses domain objects 
+and services to fulfill user's requests. Use Case should be stateless (i.e. should not hold business 
+data between requests) which help applications to scale.
 
-  - To exec the app please run:  
-    php app.php -f {amazon_url} -f {amazon_url} -f {amazon_url}
+#### Infrastructure
+>Which are external tools and adapters. Infra implements interfaces defined by domain and application
+layers. Tools should be at infrastructure layers such as Database access, Http client, etc.
 
-## DOMAIN LAYER:
-Define the domain objects, domain services, repository interfaces, domain-specific exceptions, domain-level configs.  
-The domain object properties should be privated with setter, getter.  
-Domain layer should not depend on infra, application layers. Both should depend on abstractions (interfaces defined by domain layer).
+#### UI
+>Which takes user's input, convert into application layer input (use case input), invokes the 
+use case and renders output to client (web view, command line, etc).  
+<br/>
 
-Configuration: the config loader (Singleton) that in turn loads config values from config.ini file, 
-could be improved to load from env variables for deploying on multiple environments.
+### CODING PRINCIPLES
+- **Dependency Inversion**: higher-level modules should not depend on lower-level modules,
+both should depend on abstractions. I.e. Application services should not depend
+on implementation details by Infrastructure/UI layer, instead they should define interfaces
+for the outer layers to implement. 
+Then by using an IoC containers will help to inject dependencies (dependency injection)
+into our Application services.
 
-## APPLICATION LAYER:
-UseCase: define interface for use cases (function execute(UseCaseInput $input): UseCaseOutput)   
-UseCaseInput: abstract base class for use cases input with a $id property and force child classes to implement validate() function.
-UseCaseOutput: abstract base class for use cases output.
+- **Code to Interfaces**: defines WHAT (interfaces) before HOW (implementation. And we're going to need lots
+of helper methods for the HOW).
 
-GrossPriceUseCase: the desired use case which implements UseCase interface.
-Use cases should handle domain-level and application-level exceptions (internal domain data should not be leaked to outside) and may throw an use case specific exception for the view to know.
-
-GrossPricePresenterCLI: this presenter is to adapt the use case output to the CLI view.
-
-## INFRA:
-WebItemRepository: implements ItemRepository interface. It takes the $url and returns Item object.
-Tried some DOM parses with the Amazon pages but it did not work as expected so I choose to use regex instead. Could improve performance by using multithreading, async mechanism.
-
-Repo should handle infra exceptions and may throw domain-level or application-level exceptions for the layers to handle.
-
-## UI:
-GrossPriceCLI: the command line view. It takes user input, transforms to the use case input,
-exec the use case, invokes the presenter to adapt the use case output and the response to users.
-
+- **Composition over Inheritance**: instead of keep extending from a base class (overriding 
+and adding new behaviors) we should break into classes with single responsibility
+and composing them (has-a relationship) to archive desired functionality. This allow our code to be more flexible
+and maintainable.
 
 
