@@ -1,5 +1,17 @@
 {
-"autoload": {
+    "name" : "clean-architecture",
+    "authors": [{
+        "name": "Nguyen Dinh Hung",
+        "homepage": "https://github.com/huqd"
+    }],
+    "type" : "project",
+    "description" : "An example with Clean Architecture",
+    "keywords" : [
+        "clean architecture",
+        "php"
+    ],
+    "license" : "MIT",
+    "autoload": {
     "psr-4": {
         "App\\": "app/"
     }
