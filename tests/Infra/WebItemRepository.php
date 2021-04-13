@@ -3,7 +3,7 @@
 namespace Tests\Infra;
 
 use PHPUnit\Framework\TestCase;
-use App\Infra\WebItemRepository;
+use App\Infrastructure\WebItemRepository;
 use App\Domain\Item\Item;
 
 

@@ -5,12 +5,7 @@ require 'app/bootstrap.php';
 $options = getopt("f:");
 $foptions = $options["f"];
 
-# Involke the coresponding view/controller
+# Invoke the corresponding view/controller
 if ($foptions) {
     (new App\UI\GrossPriceCLI())->calculate($foptions);
 }
-
-# Another request
-// if ($options) {
-//     (new App\UI\otherView())->doSomething(options);
-// }

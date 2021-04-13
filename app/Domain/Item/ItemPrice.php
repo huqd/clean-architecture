@@ -9,18 +9,13 @@ use App\Domain\Configuration;
 class ItemPrice
 {
     private $item;
+    private $shipFee;
     private $price;
 
-    private static $config;  # Static
-    private static $weight_coefficient;
-    private static $dimension_coefficient;
-
-    public function __construct($item)
+    public function __construct($item, $shipFee)
     {
         $this->item = $item;
-        self::$config = Configuration::getInstance();
-        self::$weight_coefficient = self::$config->getWeightCoefficient();
-        self::$dimension_coefficient = self::$config->getDimensionCoefficient();
+        $this->shipFee = $shipFee;
     }
 
     public function getPrice()
@@ -28,25 +23,10 @@ class ItemPrice
         return $this->price;
     }
 
-    public function calculatePrice()
+    public function price()
     {
-        $price = $this->item->getProductPrice() + $this->shipping_fee();
-        $this->price = $price; # Save price for later access. No need to recalculate.
+        $price = $this->item->getProductPrice() + $this->shipFee->fee();
+        $this->price = $price; # Cache price.
         return $price;
-    }
-
-    protected function shipping_fee()
-    {
-        return max($this->fee_by_weight(), $this->fee_by_dimensions());
-    }
-
-    protected function fee_by_weight()
-    {
-        return $this->item->getWeight() * self::$weight_coefficient;
-    }
-
-    protected function fee_by_dimensions()
-    {
-        return $this->item->getWidth() * $this->item->getHeight() * $this->item->getDepth() * self::$dimension_coefficient;
     }
 }

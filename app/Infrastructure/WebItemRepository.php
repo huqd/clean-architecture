@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Infra;
+namespace App\Infrastructure;
 
-use App\Domain\Item\{Item, ItemRepository, ItemCreateException};
+use App\Domain\Item\{Item, ItemRepository};
+use App\Domain\Item\ItemCreateException;
 use App\Domain\Configuration;
 use Exception;
 

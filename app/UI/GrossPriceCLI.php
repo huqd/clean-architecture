@@ -3,7 +3,7 @@
 namespace App\UI;
 
 use App\Application\GrossPrice\{GrossPriceUseCase, GrossPriceUseCaseInput, GrossPriceUseCaseOutput, GrossPricePresenterCLI};
-use App\Infra\WebItemRepository;
+use App\Infrastructure\WebItemRepository;
 use Exception;
 
 class GrossPriceCLI
@@ -13,19 +13,18 @@ class GrossPriceCLI
         try {
             echo "Calculating...";
             # View input
-            $items_urls = $this->normalizeInput($foptions);
-            $usecase_input = new GrossPriceUseCaseInput($items_urls);
+            $urls = $this->normalizeInput($foptions);
+            $usecaseInput = new GrossPriceUseCaseInput($urls);
 
             # Execute use case
             $repo = new WebItemRepository(); # Should be injected by a IoC container
-            $use_case = new GrossPriceUseCase($repo);
-            $output = $use_case->execute($usecase_input);
-
-            $presenter = new GrossPricePresenterCLI($output);
+            $usecase = new GrossPriceUseCase($repo);
+            $output = $usecase->execute($usecaseInput);
 
             # View output
-            $gross_price = $presenter->present();
-            echo "\n\nGross price: \$$gross_price";
+            $presenter = new GrossPricePresenterCLI($output);
+            $grossPrice = $presenter->present();
+            echo "\n\nGross price: \$$grossPrice";
         } catch (Exception $e) {
             echo $e->getMessage();
         }

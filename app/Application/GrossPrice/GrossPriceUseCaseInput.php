@@ -6,7 +6,7 @@ use App\Application\UseCaseInput;
 
 class GrossPriceUseCaseInput extends UseCaseInput
 {
-    public $items_urls;
+    private $items_urls;
 
     public function __construct($items_urls)
     {
@@ -16,6 +16,10 @@ class GrossPriceUseCaseInput extends UseCaseInput
 
     public function validate($items_urls)
     {
-        return True;
+        return true;
+    }
+
+    public function getItemsUrls() {
+        return $this->items_urls;
     }
 }
